@@ -20,6 +20,7 @@
     "SPEC.md"
   ],
   "scripts": {
+    "prepare": "node eng/build.js",
     "validate": "node eng/validate.js",
     "build": "node eng/build.js",
     "fix-line-endings": "node eng/fix-line-endings.js",
