@@ -1,0 +1,43 @@
+{
+  "name": "customer-support-skillz",
+  "version": "0.2.0",
+  "description": "Open, contribute-able catalog of customer-support industry how-tos (vocabulary, behavioral rules, escalation, guardrails, eval scenarios). Structures, never values.",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./catalog.json": "./dist/catalog.json"
+  },
+  "files": [
+    "dist",
+    "industries",
+    "SPEC.md"
+  ],
+  "scripts": {
+    "validate": "node eng/validate.js",
+    "build": "node eng/build.js",
+    "fix-line-endings": "node eng/fix-line-endings.js",
+    "pretest": "npm run validate",
+    "test": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Humaner-inc/customer-support-skillz.git"
+  },
+  "keywords": [
+    "customer-support",
+    "ai-agents",
+    "skillz",
+    "prompt-engineering",
+    "humaner"
+  ]
+}

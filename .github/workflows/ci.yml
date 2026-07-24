@@ -1,0 +1,23 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run validate
+      - run: npm run build
+      - name: Fail if catalog build produced uncommitted dist changes tracked by git
+        run: |
+          if git status --porcelain dist 2>/dev/null | grep -q .; then
+            echo "dist/ should not be committed — check .gitignore"
+            exit 1
+          fi
