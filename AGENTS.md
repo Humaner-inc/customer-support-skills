@@ -22,8 +22,7 @@ except `npm run validate` / `npm run build`.
 └── CONTRIBUTING.md                # human contribution guide
 ```
 
-**One skill = one folder = one SKILL.md.** Each industry has exactly four
-skills: core, behavior, escalation, guardrails.
+**One skill = one folder = one SKILL.md.** Each industry has exactly four pillars : core, behavior, escalation, guardrails.
 
 ## Setup commands
 

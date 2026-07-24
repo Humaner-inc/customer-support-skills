@@ -1,4 +1,28 @@
+# Dependencies
 node_modules/
+
+# Build output (generated on install / publish)
 dist/
+
+# Pack / publish artifacts
+*.tgz
 *.log
+npm-debug.log*
+.npmrc
+
+# Env
+.env
+.env.*
+
+# OS / editor
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Coverage / caches
+coverage/
+.turbo/
+.cache/

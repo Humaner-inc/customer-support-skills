@@ -27,15 +27,12 @@ accepts contributions from humans and AI agents alike (see
   cancellation fee) must stay in `guardrails/SKILL.md` under
   `## Eval scenarios -- traps` as a *false premise the customer might raise*,
   never asserted as true elsewhere in the package.
-- **Persona preset dimensions** (character, verbosity, formality, emoji mode,
-  etc.) -- these are private to downstream runtimes. The `core/SKILL.md`
-  provides a generic professional caring baseline only.
 - **Legal, medical, or clinical advice content** presented as something the
   agent should give -- guardrail and behavior files should tell the agent to
   *redirect*, not supply the advice.
-- Content that encodes a real, identifiable business's internal policy,
+- **Content that encodes a real, identifiable business's internal policy**,
   contact information, or proprietary process.
-- Duplicate industries that don't meaningfully differ in vocabulary,
+- **Duplicate industries** that don't meaningfully differ in vocabulary,
   escalation, or guardrail shape from an existing package.
 
 ## Adding an industry

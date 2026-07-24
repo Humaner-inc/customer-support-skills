@@ -1,7 +1,7 @@
 {
   "name": "@humaner/customer-support-skillz",
-  "version": "0.2.0",
-  "description": "Open, contribute-able catalog of customer-support industry how-tos (vocabulary, behavioral rules, escalation, guardrails, eval scenarios). Structures, never values.",
+  "version": "0.3.0",
+  "description": "An open source library of customer-support industry how-tos. Each industry folder teaches behavior and common issues before ingesting your own KBs.",
   "type": "module",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "prepare": "node eng/build.js",
+    "prepublishOnly": "npm run validate && npm run build",
     "validate": "node eng/validate.js",
     "build": "node eng/build.js",
     "fix-line-endings": "node eng/fix-line-endings.js",
@@ -30,9 +31,16 @@
   "engines": {
     "node": ">=18"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Humaner-inc/customer-support-skillz.git"
+    "url": "git+https://github.com/Humaner-inc/customer-support-skillz.git"
+  },
+  "homepage": "https://github.com/Humaner-inc/customer-support-skillz#readme",
+  "bugs": {
+    "url": "https://github.com/Humaner-inc/customer-support-skillz/issues"
   },
   "keywords": [
     "customer-support",
