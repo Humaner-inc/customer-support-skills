@@ -1,5 +1,5 @@
 {
-  "name": "customer-support-skillz",
+  "name": "@humaner/customer-support-skillz",
   "version": "0.2.0",
   "description": "Open, contribute-able catalog of customer-support industry how-tos (vocabulary, behavioral rules, escalation, guardrails, eval scenarios). Structures, never values.",
   "type": "module",

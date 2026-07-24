@@ -2,7 +2,7 @@
 
 ## Project overview
 
-`customer-support-skillz` is a community-contributable catalog of
+`@humaner/customer-support-skillz` is a community-contributable catalog of
 customer-support industry skills. It is plain markdown + JSON Schema + a
 zero-dependency Node build -- no frameworks, no secrets, nothing to run
 except `npm run validate` / `npm run build`.

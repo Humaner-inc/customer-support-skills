@@ -48,12 +48,18 @@ industries/<name>/
 ## Using the catalog
 
 ```bash
+npm install @humaner/customer-support-skillz
+```
+
+From this repo (contributors):
+
+```bash
 npm install
 npm run build   # writes dist/catalog.json + dist/index.js
 ```
 
 ```js
-import { getIndustry, listIndustries } from 'customer-support-skillz';
+import { getIndustry, listIndustries } from '@humaner/customer-support-skillz';
 
 const retail = getIndustry('retail');
 console.log(retail.skills.core.commonTopics);
@@ -73,11 +79,15 @@ Humaner OSS and cloud projects both **use this catalog as a dependency**.
 ## Contributing
 
 We welcome new skillz and improvements to existing ones. See
-[`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`SPEC.md`](./SPEC.md). 
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) and [`SPEC.md`](./SPEC.md).
 AI agents contributing to this repo should also read [`AGENTS.md`](./AGENTS.md).
 
+Maintainers: [`MAINTAINING.md`](./MAINTAINING.md) — community PRs target
+`contributions`; maintainers promote to protected `master`.
+
 **Rule zero:** every file describes a *structure*, never a real company's
-value. No invented "our policy is X" facts. Only **how to** think inside a category and how to act properly according to core rules.
+value. No invented "our policy is X" facts. Only **how to** think inside a
+category and how to act properly according to core rules.
 
 ## License
 

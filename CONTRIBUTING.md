@@ -88,14 +88,17 @@ Both must pass before requesting review.
 
 ## Submitting your contribution
 
-1. Fork this repository
-2. Create a branch from `main`
+1. Fork this repository (from **`master`**, the default / stable branch)
+2. Create a feature branch on **your fork** (e.g. `add-healthcare`)
 3. Make your changes following the guides above
 4. Run `npm run validate && npm run build`
-5. Open a pull request against `main` with:
+5. Open a pull request with **base = `contributions`** (not `master`) with:
    - A clear title (e.g. "Add healthcare industry package")
    - Which skills you added/changed and why
    - Confirmation that `npm run validate` passes
+
+Maintainers review on `contributions`, then promote to `master` when ready.
+See [`MAINTAINING.md`](./MAINTAINING.md).
 
 ## Code of conduct
 
