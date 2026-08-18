@@ -1,8 +1,8 @@
-# @humaner/customer-support-skillz
+# @humaner/customer-support-skills
 
-**An open source library of customer-support industry how-tos.**
+**An open source library of customer-support how-tos.**
 
-Each industry folder teaches behavior and common issues before ingesting your own KBs. So your agents act like customer employees joining a company — they know how customer support works and only lack the company's knowledge:
+Each skill folder teaches behavior and common issues within and industry before your own knowledge. Onboarding agents like real employees:
 
 - vocabulary
 - common questions
@@ -10,9 +10,9 @@ Each industry folder teaches behavior and common issues before ingesting your ow
 - escalation triggers
 - guardrails
 
-It does not encode real company's policies, prices, or promises.
+It does not encode real company's policies, prices or promises.
 
-This repo is the open Industry Skillz layer referenced inside [Humaner](https://github.com/Humaner-inc/humaner) as the vertical knowledge. It's **framework-agnostic** so any support agent can ingest the catalog for its own purpose.
+This repo is the open Industry Skills layer referenced inside [Humaner](https://github.com/Humaner-inc). Completely agnostic and adaptable to any businesses within these verticals.
 
 ## What's in here
 
@@ -49,11 +49,11 @@ industries/<name>/
 ## Using the catalog
 
 ```bash
-npm install @humaner/customer-support-skillz
+npm install @humaner/customer-support-skills
 ```
 
 ```js
-import { getIndustry, listIndustries } from '@humaner/customer-support-skillz';
+import { getIndustry, listIndustries } from '@humaner/customer-support-skills';
 
 const retail = getIndustry('retail');
 console.log(retail.skills.core.commonTopics);
@@ -62,19 +62,32 @@ console.log(retail.skills.escalation.triggers);
 console.log(retail.skills.guardrails.forbiddenTopics);
 ```
 
-Or load JSON directly:
+The published API is plain ESM, so it works in Node, Next.js /
+webpack client bundles, Vite, and edge runtimes.
+
+**For agent reply / prompt paths, prefer the slim runtime entry** (baseline
+skills only — no bulky problem-solving procedures):
 
 ```js
-import catalog from '@humaner/customer-support-skillz/catalog.json';
+import { getIndustry, SKILLS_VERSION } from '@humaner/customer-support-skills/runtime';
+```
+
+Or load the catalog directly:
+
+```js
+import catalog from '@humaner/customer-support-skills/catalog.json';
+// or
+import catalog from '@humaner/customer-support-skills/catalog.js';
 ```
 
 ## Contributing
 
-Add or improve skillz, open a PR into **`contributions`**. Then we review & promote to `master` when ready.
+Add or improve skills, open a PR into **`contributions`**. 
+Then we review & promote when approved.
 
 **Rules**
 
-1. **How-to, never companies metriccs**  you must teach how solving *problem a* works.
+1. **How-to, never embed companies metrics**  you must teach how solving *this problem* works.
 2. **One skill = one folder = one `SKILL.md`** copy an existing industry as a template.
 3. Every industry needs the four baselines: `core`, `behavior`, `escalation`, `guardrails`.
 4. Run before you open the PR:

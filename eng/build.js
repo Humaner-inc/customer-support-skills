@@ -3,6 +3,10 @@
 // accessor API (dist/index.js + dist/index.d.ts). Consumers (e.g. Humaner's
 // private runtime) depend on this package and adapt the catalog into their
 // own internal types.
+//
+// Also emits:
+// - dist/runtime.js — slim agent-facing catalog (no problem-solving procedures)
+// - dist/industries/<id>.js — per-industry full packages for tree-shaking
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -11,6 +15,7 @@ import { loadCatalog } from './load-catalog.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const DIST_DIR = join(ROOT, 'dist');
+const INDUSTRIES_DIST = join(DIST_DIR, 'industries');
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
 const catalog = loadCatalog();
@@ -24,24 +29,72 @@ for (const [id, industry] of Object.entries(catalog.industries)) {
 }
 
 mkdirSync(DIST_DIR, { recursive: true });
+mkdirSync(INDUSTRIES_DIST, { recursive: true });
 
 const catalogDocument = {
-  skillzVersion: pkg.version,
+  skillsVersion: pkg.version,
   generatedAt: new Date().toISOString(),
   ...catalog
 };
 
-writeFileSync(join(DIST_DIR, 'catalog.json'), JSON.stringify(catalogDocument, null, 2) + '\n');
+/** Strip bulky problem-solving procedures — agents need baseline structure at reply time. */
+function toRuntimeIndustry(industry) {
+  const skills = {
+    core: industry.skills.core,
+    behavior: industry.skills.behavior,
+    escalation: industry.skills.escalation,
+    guardrails: industry.skills.guardrails
+  };
+  return { id: industry.id, skills };
+}
 
-const indexJs = [
-  '// GENERATED FILE \u2014 produced by `npm run build` from industries/**/*.',
-  '// Do not edit; edit the markdown source packages instead.',
-  "import { createRequire } from 'node:module';",
+const runtimeDocument = {
+  skillsVersion: catalogDocument.skillsVersion,
+  generatedAt: catalogDocument.generatedAt,
+  industries: Object.fromEntries(
+    Object.entries(catalog.industries).map(([id, industry]) => [
+      id,
+      toRuntimeIndustry(industry)
+    ])
+  )
+};
+
+function writeGeneratedJs(filePath, bodyLines) {
+  writeFileSync(
+    filePath,
+    [
+      '// GENERATED FILE \u2014 produced by `npm run build` from industries/**/*.',
+      '// Do not edit; edit the markdown source packages instead.',
+      ...bodyLines,
+      ''
+    ].join('\n')
+  );
+}
+
+const catalogJson = JSON.stringify(catalogDocument, null, 2) + '\n';
+writeFileSync(join(DIST_DIR, 'catalog.json'), catalogJson);
+
+writeGeneratedJs(join(DIST_DIR, 'catalog.js'), [
+  `export default ${JSON.stringify(catalogDocument)};`
+]);
+
+writeGeneratedJs(join(DIST_DIR, 'runtime-data.js'), [
+  `export default ${JSON.stringify(runtimeDocument)};`
+]);
+
+for (const [id, industry] of Object.entries(catalog.industries)) {
+  writeGeneratedJs(join(INDUSTRIES_DIST, `${id}.js`), [
+    `export default ${JSON.stringify(industry)};`
+  ]);
+  writeGeneratedJs(join(INDUSTRIES_DIST, `${id}.runtime.js`), [
+    `export default ${JSON.stringify(toRuntimeIndustry(industry))};`
+  ]);
+}
+
+const accessorApi = (importPath) => [
+  `import catalog from '${importPath}';`,
   '',
-  'const require = createRequire(import.meta.url);',
-  "const catalog = require('./catalog.json');",
-  '',
-  'export const SKILLZ_VERSION = catalog.skillzVersion;',
+  'export const SKILLS_VERSION = catalog.skillsVersion;',
   '',
   'export function listIndustries() {',
   '  return Object.values(catalog.industries);',
@@ -55,14 +108,22 @@ const indexJs = [
   '  return Object.keys(catalog.industries);',
   '}',
   '',
-  'export default catalog;',
-  ''
-].join('\n');
-writeFileSync(join(DIST_DIR, 'index.js'), indexJs);
+  'export default catalog;'
+];
 
-const indexDts = [
-  '// GENERATED FILE \u2014 produced by `npm run build`.',
-  '',
+writeGeneratedJs(join(DIST_DIR, 'index.js'), [
+  // Plain ESM — works in Node, webpack/Next, Vite, edge runtimes.
+  // Avoid createRequire / node:module so client + serverless bundles succeed.
+  ...accessorApi('./catalog.js')
+]);
+
+writeGeneratedJs(join(DIST_DIR, 'runtime.js'), [
+  // Slim agent runtime: baseline skills only (no procedure markdown).
+  // Prefer this entry on chat / prompt hot paths.
+  ...accessorApi('./runtime-data.js')
+]);
+
+const sharedTypes = [
   'export interface CoreSkill {',
   '  name: string;',
   '  description: string;',
@@ -122,13 +183,30 @@ const indexDts = [
   '  };',
   '}',
   '',
-  'export const SKILLZ_VERSION: string;',
+  '/** Agent-facing package: baseline skills only (no problem-solving procedures). */',
+  'export interface RuntimeIndustryPackage {',
+  '  id: string;',
+  '  skills: {',
+  '    core: CoreSkill;',
+  '    behavior: BehaviorSkill;',
+  '    escalation: EscalationSkill;',
+  '    guardrails: GuardrailsSkill;',
+  '  };',
+  '}'
+];
+
+const indexDts = [
+  '// GENERATED FILE \u2014 produced by `npm run build`.',
+  '',
+  ...sharedTypes,
+  '',
+  'export const SKILLS_VERSION: string;',
   'export function listIndustries(): IndustryPackage[];',
   'export function getIndustry(id: string): IndustryPackage | undefined;',
   'export function listIndustryIds(): string[];',
   '',
   'declare const catalog: {',
-  '  skillzVersion: string;',
+  '  skillsVersion: string;',
   '  generatedAt: string;',
   '  industries: Record<string, IndustryPackage>;',
   '};',
@@ -136,6 +214,26 @@ const indexDts = [
   ''
 ].join('\n');
 writeFileSync(join(DIST_DIR, 'index.d.ts'), indexDts);
+
+const runtimeDts = [
+  '// GENERATED FILE \u2014 produced by `npm run build`.',
+  '',
+  ...sharedTypes,
+  '',
+  'export const SKILLS_VERSION: string;',
+  'export function listIndustries(): RuntimeIndustryPackage[];',
+  'export function getIndustry(id: string): RuntimeIndustryPackage | undefined;',
+  'export function listIndustryIds(): string[];',
+  '',
+  'declare const catalog: {',
+  '  skillsVersion: string;',
+  '  generatedAt: string;',
+  '  industries: Record<string, RuntimeIndustryPackage>;',
+  '};',
+  'export default catalog;',
+  ''
+].join('\n');
+writeFileSync(join(DIST_DIR, 'runtime.d.ts'), runtimeDts);
 
 // ---- regenerate the README industries table between markers ------------
 
@@ -179,6 +277,11 @@ const industryCount = Object.keys(catalog.industries).length;
 const totalSkills = Object.values(catalog.industries).reduce(
   (sum, ind) => sum + Object.keys(ind.skills).length, 0
 );
+const fullBytes = Buffer.byteLength(JSON.stringify(catalogDocument));
+const runtimeBytes = Buffer.byteLength(JSON.stringify(runtimeDocument));
 console.log(
-  `\u2713 built dist/catalog.json + dist/index.{js,d.ts} \u2014 ${industryCount} industries, ${totalSkills} total skills.`
+  `\u2713 built dist/catalog.{json,js} + dist/runtime.js + dist/industries/* \u2014 ${industryCount} industries, ${totalSkills} total skills.`
+);
+console.log(
+  `  full catalog ${Math.round(fullBytes / 1024)}KB \u2192 runtime ${Math.round(runtimeBytes / 1024)}KB (${Math.round((1 - runtimeBytes / fullBytes) * 100)}% smaller for agent hot paths)`
 );

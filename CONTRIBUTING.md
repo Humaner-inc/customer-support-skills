@@ -1,4 +1,4 @@
-# Contributing to customer-support-skillz
+# Contributing to customer-support-skills
 
 Thanks for helping grow the open customer-support how-to catalog! This repo
 accepts contributions from humans and AI agents alike (see

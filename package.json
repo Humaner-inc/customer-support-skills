@@ -1,7 +1,7 @@
 {
-  "name": "@humaner/customer-support-skillz",
-  "version": "0.3.0",
-  "description": "An open source library of customer-support industry how-tos. Each industry folder teaches behavior and common issues before ingesting your own KBs.",
+  "name": "@humaner/customer-support-skills",
+  "version": "0.3.3",
+  "description": "An open source library of customer-support how-tos. Each skill folder teaches behavior and common issues within and industry before your own knowledge.",
   "type": "module",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -12,7 +12,14 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./catalog.json": "./dist/catalog.json"
+    "./runtime": {
+      "types": "./dist/runtime.d.ts",
+      "import": "./dist/runtime.js",
+      "default": "./dist/runtime.js"
+    },
+    "./catalog.json": "./dist/catalog.json",
+    "./catalog.js": "./dist/catalog.js",
+    "./industries/*": "./dist/industries/*"
   },
   "files": [
     "dist",
@@ -36,16 +43,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Humaner-inc/customer-support-skillz.git"
+    "url": "git+https://github.com/Humaner-inc/customer-support-skills.git"
   },
-  "homepage": "https://github.com/Humaner-inc/customer-support-skillz#readme",
+  "homepage": "https://github.com/Humaner-inc/customer-support-skills#readme",
   "bugs": {
-    "url": "https://github.com/Humaner-inc/customer-support-skillz/issues"
+    "url": "https://github.com/Humaner-inc/customer-support-skills/issues"
   },
   "keywords": [
     "customer-support",
     "ai-agents",
-    "skillz",
+    "skills",
     "prompt-engineering",
     "humaner"
   ]

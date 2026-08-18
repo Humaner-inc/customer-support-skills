@@ -2,7 +2,7 @@
 
 ## Project overview
 
-`@humaner/customer-support-skillz` is a community-contributable catalog of
+`@humaner/customer-support-skills` is a community-contributable catalog of
 customer-support industry skills. It is plain markdown + JSON Schema + a
 zero-dependency Node build -- no frameworks, no secrets, nothing to run
 except `npm run validate` / `npm run build`.
@@ -29,8 +29,11 @@ except `npm run validate` / `npm run build`.
 ```bash
 npm install
 npm run validate   # schema + required-sections + structures-never-values lint
-npm run build      # writes dist/catalog.json + dist/index.js
+npm run build      # writes dist/catalog.*, dist/runtime.js, dist/industries/*
 ```
+
+Prefer `@humaner/customer-support-skills/runtime` on agent reply / prompt hot
+paths (baseline skills only, ~86% smaller than the full catalog).
 
 There is no test suite beyond `validate` + `build` -- a clean run of both is
 the bar for "this change is safe to merge."
